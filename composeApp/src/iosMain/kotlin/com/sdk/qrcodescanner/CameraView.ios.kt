@@ -82,7 +82,6 @@ import platform.UIKit.UIDeviceOrientationDidChangeNotification
 import platform.UIKit.UIView
 import platform.darwin.NSObject
 import platform.darwin.dispatch_get_main_queue
-import qrscanner.QrCodeScanner
 import kotlin.OptIn
 import kotlin.String
 import kotlin.Unit

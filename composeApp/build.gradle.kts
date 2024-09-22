@@ -55,8 +55,6 @@ kotlin {
             api(libs.moko.permissions.compose)
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.lifecycle.viewmodel.compose)
-
-            implementation("network.chaintech:qr-kit:2.0.0")
         }
 
         commonTest.dependencies {

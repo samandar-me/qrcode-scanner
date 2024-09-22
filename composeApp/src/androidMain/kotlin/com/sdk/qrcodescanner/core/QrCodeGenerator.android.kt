@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream
 
 class QRCodeGeneratorImpl : QrCodeGenerator {
     override fun generateQrCode(content: String): ByteArray {
-        val bitMatrix = MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, 200, 200)
+        val bitMatrix = MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, 250, 250)
         val width = bitMatrix.width
         val height = bitMatrix.height
         val pixels = IntArray(width * height)

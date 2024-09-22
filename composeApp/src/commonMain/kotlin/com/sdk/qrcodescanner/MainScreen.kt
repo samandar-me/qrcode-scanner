@@ -22,10 +22,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import com.sdk.qrcodescanner.generator.GeneratorScreen
 import com.sdk.qrcodescanner.scanner.ScannerScreen
 import compose.icons.FeatherIcons
-import compose.icons.feathericons.Camera
 import compose.icons.feathericons.Link2
 import compose.icons.feathericons.Maximize
-import qrscanner.QrCodeScanner
 
 internal object MainScreen: Screen {
 
