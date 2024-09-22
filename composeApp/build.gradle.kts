@@ -80,6 +80,7 @@ kotlin {
 
             implementation(libs.zxing)
             implementation(libs.zxing.android.embedded)
+            implementation(libs.androidx.window)
 
         }
 

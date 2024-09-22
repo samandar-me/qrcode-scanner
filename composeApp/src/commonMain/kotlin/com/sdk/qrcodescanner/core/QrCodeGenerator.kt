@@ -1,8 +1,6 @@
 package com.sdk.qrcodescanner.core
 
-//expect fun generateQrCode(
-//    value: String,
-//    onGenerated: (What?) -> Unit
-//)
-
-expect class PlatformImage
+interface QrCodeGenerator {
+    fun generateQrCode(content: String): ByteArray
+}
+expect fun getGenerator(): QrCodeGenerator

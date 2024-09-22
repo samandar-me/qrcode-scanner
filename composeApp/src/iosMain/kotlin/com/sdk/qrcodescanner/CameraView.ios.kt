@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,6 +55,8 @@ import platform.AVFoundation.AVCaptureOutput
 import platform.AVFoundation.AVCapturePhotoOutput
 import platform.AVFoundation.AVCaptureSession
 import platform.AVFoundation.AVCaptureSessionPresetPhoto
+import platform.AVFoundation.AVCaptureTorchModeOff
+import platform.AVFoundation.AVCaptureTorchModeOn
 import platform.AVFoundation.AVCaptureVideoOrientationLandscapeLeft
 import platform.AVFoundation.AVCaptureVideoOrientationLandscapeRight
 import platform.AVFoundation.AVCaptureVideoOrientationPortrait
@@ -61,7 +64,9 @@ import platform.AVFoundation.AVCaptureVideoPreviewLayer
 import platform.AVFoundation.AVLayerVideoGravityResizeAspectFill
 import platform.AVFoundation.AVMediaTypeVideo
 import platform.AVFoundation.AVMetadataMachineReadableCodeObject
+import platform.AVFoundation.hasTorch
 import platform.AVFoundation.isTorchActive
+import platform.AVFoundation.torchActive
 import platform.AVFoundation.torchMode
 import platform.AudioToolbox.AudioServicesPlaySystemSound
 import platform.AudioToolbox.kSystemSoundID_Vibrate
@@ -118,7 +123,6 @@ private fun DeviceCamera(
     onQrCodeScanned: (String) -> Unit
 ) {
     val capturePhotoOutput = remember { AVCapturePhotoOutput() }
-    var actualOrientation by remember { mutableStateOf(AVCaptureVideoOrientationPortrait) }
 
     val captureSession: AVCaptureSession = remember {
         AVCaptureSession().also { captureSession ->
@@ -152,59 +156,15 @@ private fun DeviceCamera(
         }
     }
     val cameraPreviewLayer = remember { AVCaptureVideoPreviewLayer(session = captureSession) }
+
     DisposableEffect(Unit) {
-//        class OrientationListener : NSObject() {
-//            @ObjCAction
-//            fun orientationDidChange(arg: NSNotification) {
-//                val cameraConnection = cameraPreviewLayer.connection
-//                if (cameraConnection != null) {
-//                    actualOrientation = when (UIDevice.currentDevice.orientation) {
-//                        UIDeviceOrientation.UIDeviceOrientationPortrait ->
-//                            AVCaptureVideoOrientationPortrait
-//
-//                        UIDeviceOrientation.UIDeviceOrientationLandscapeLeft ->
-//                            AVCaptureVideoOrientationLandscapeRight
-//
-//                        UIDeviceOrientation.UIDeviceOrientationLandscapeRight ->
-//                            AVCaptureVideoOrientationLandscapeLeft
-//
-//                        UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown ->
-//                            AVCaptureVideoOrientationPortrait
-//
-//                        else -> cameraConnection.videoOrientation
-//                    }
-//                    cameraConnection.videoOrientation = actualOrientation
-//                }
-//                capturePhotoOutput.connectionWithMediaType(AVMediaTypeVideo)
-//                    ?.videoOrientation = actualOrientation
-//            }
-//        }
-//
-//        val listener = OrientationListener()
-//        val notificationName = UIDeviceOrientationDidChangeNotification
-//        NSNotificationCenter.defaultCenter.addObserver(
-//            observer = listener,
-//            selector = NSSelectorFromString(
-//                OrientationListener::orientationDidChange.name + ":"
-//            ),
-//            name = notificationName,
-//            `object` = null
-//        )
+        captureSession.startRunning()
         onDispose {
-//            NSNotificationCenter.defaultCenter.removeObserver(
-//                observer = listener,
-//                name = notificationName,
-//                `object` = null
-//            )
             GlobalScope.launch(Dispatchers.IO) {
                 captureSession.stopRunning()
             }
         }
     }
-
-//    QrCodeScanner()
-//
-//    camera.torchMode = true
 
     Box(
         modifier = Modifier
@@ -234,13 +194,18 @@ private fun DeviceCamera(
         IconButton(
             modifier = Modifier.padding(8.dp).align(Alignment.BottomCenter),
             onClick = {
-                if(camera.isTorchActive()) {
-                    camera.torchMode = 
-                }
+                camera.lockForConfiguration(null)
+                if (!camera.hasTorch())
+                    return@IconButton
+
+                camera.torchMode =
+                    if (camera.isTorchActive()) AVCaptureTorchModeOff else AVCaptureTorchModeOn
+
+                camera.unlockForConfiguration()
             }
         ) {
             Icon(
-                imageVector = if (torchState) FeatherIcons.Zap else FeatherIcons.ZapOff,
+                imageVector = FeatherIcons.Zap,
                 contentDescription = null
             )
         }

@@ -80,8 +80,12 @@ data class FeedbackScreen(
                 Spacer(Modifier.height(16.dp))
                 ElevatedButton(
                     onClick = {
-                        val browserContent = if(matchWebUrl(result)) result else "https://www.google.com/search?q=$result"
-                        urlHandler.openUri(uri = browserContent)
+                        try {
+                            val browserContent = if(matchWebUrl(result)) result else "https://www.google.com/search?q=$result"
+                            urlHandler.openUri(uri = browserContent)
+                        } catch (e: Exception) {
+                            println("@@@${e.message}")
+                        }
                     }
                 ) {
                     Text(text = "Open in browser")

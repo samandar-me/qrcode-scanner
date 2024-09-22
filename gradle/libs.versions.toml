@@ -21,6 +21,7 @@ lifecycleViewModelCompose = "2.8.0"
 camerax = "1.3.4"
 zxing = "3.4.1"
 zxingAndroidEmbedded = "4.1.0"
+window = "1.3.0"
 
 [libraries]
 
@@ -52,6 +53,7 @@ coil = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 composeIcons-feather = { module = "br.com.devsrsouza.compose.icons:feather", version.ref = "composeIcons" }
+androidx-window = { module = "androidx.window:window", version.ref = "window" }
 
 camerax-core = {module = "androidx.camera:camera-core", version.ref = "camerax"}
 camerax-camera2 = {module = "androidx.camera:camera-camera2", version.ref = "camerax"}
